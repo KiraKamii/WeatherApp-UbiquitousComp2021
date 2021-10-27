@@ -14,6 +14,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     var currentLocation: CLLocation?
     var models = [DailyWeather]()
+    var current: CurrentWeather?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,11 +70,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             guard let result = json else{
                 return
             }
+            
+            let current = result.current
+            self.current = current
             print(result.current.temp)
+            print(self.current!.temp)
         }).resume()
         
         print("\(lat) | \(long)")
-
     }
     
     struct WeatherResponse: Codable {
