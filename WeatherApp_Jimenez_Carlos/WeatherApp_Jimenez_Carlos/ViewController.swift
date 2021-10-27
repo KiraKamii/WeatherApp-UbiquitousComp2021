@@ -12,8 +12,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
     let locationManager = CLLocationManager()
     
+    //Current Forecast Header
+    @IBOutlet weak var CurrTempLbl: UILabel!
+    @IBOutlet weak var CurrCityLbl: UILabel!
+    @IBOutlet weak var CurrDescripLbl: UILabel!
+    @IBOutlet weak var DailyHighLbl: UILabel!
+    @IBOutlet weak var DailyLowLbl: UILabel!
+    
     var currentLocation: CLLocation?
-    var models = [DailyWeather]()
+    var currentCity = ""
+    var daily = [DailyWeather]()
     var current: CurrentWeather?
     
     override func viewDidLoad() {
@@ -24,6 +32,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupLocation()
+    }
+    
+    //Update UI with json data
+    func UpdateUI(){
+        print(self.current!.temp)
+        
+        self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
+        self.CurrCityLbl.text = self.currentCity
+        self.CurrDescripLbl.text = self.current!.weather[0].description.capitalized
+        self.DailyHighLbl.text = "H: \(Int(daily[0].temp.max))°"
+        self.DailyLowLbl.text = "L: \(Int(daily[0].temp.min))°"
     }
 
     //Location Code
@@ -47,6 +66,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
         let long = currentLocation.coordinate.longitude
         let lat = currentLocation.coordinate.latitude
+        // reverse geocode
+        CLGeocoder().reverseGeocodeLocation(currentLocation) {(placemarks, error) in
+            
+            if error != nil {
+                print(error!)
+                return
+            }
+            
+            if let place = placemarks?[0] {
+                print(place.locality!)
+                let city = place.locality!
+                self.currentCity = city
+            }
+        }
        
         
         let url = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(long)&units=imperial&exclude=minutely,alerts&appid=6aa2143b65318292816763d3c06f2121"
@@ -71,10 +104,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 return
             }
             
+            //store current weather data
             let current = result.current
             self.current = current
-            print(result.current.temp)
-            print(self.current!.temp)
+            
+            let daily = result.daily
+            self.daily.append(contentsOf: daily)
+                        
+            //print(result.current.temp)
+            //print(self.currWeatherInfo)
+            
+            DispatchQueue.main.async {
+                self.UpdateUI()
+            }
         }).resume()
         
         print("\(lat) | \(long)")
