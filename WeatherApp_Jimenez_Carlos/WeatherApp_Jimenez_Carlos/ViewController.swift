@@ -133,12 +133,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     //optional rain and snow
     struct CurrRainInfo: Codable{
         
-        let Vol: Double
+        let Vol: Double?
     }
     
     struct CurrSnowInfo: Codable{
 
-        let Vol: Double
+        let Vol: Double?
     }
     
     struct HourlyWeather: Codable{
