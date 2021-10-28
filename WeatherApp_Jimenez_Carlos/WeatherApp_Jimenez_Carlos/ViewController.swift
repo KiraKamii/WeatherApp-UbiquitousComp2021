@@ -19,25 +19,42 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var DailyHighLbl: UILabel!
     @IBOutlet weak var DailyLowLbl: UILabel!
     
+    //Hourly weather collection view
+    @IBOutlet var HourlyCollectView: UICollectionView!
+    
     var currentLocation: CLLocation?
     var currentCity = ""
     var daily = [DailyWeather]()
+    var hourly = [HourlyWeather]()
     var current: CurrentWeather?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupLocation()
+        
+    }
+    
+    func getTime(dt: Int) -> String {
+        let time = Date(timeIntervalSince1970: TimeInterval(dt))
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "h a"
+        timeFormatter.timeZone = NSTimeZone() as TimeZone
+        let localTime = timeFormatter.string(from: time)
+        //print(localTime)
+        return localTime
     }
     
     //Update UI with json data
     func UpdateUI(){
-        print(self.current!.temp)
-        
+        //print(self.current!.temp)
+        HourlyCollectView.delegate = self
+        HourlyCollectView.dataSource = self
+
         self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
         self.CurrCityLbl.text = self.currentCity
         self.CurrDescripLbl.text = self.current!.weather[0].description.capitalized
@@ -110,10 +127,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             let daily = result.daily
             self.daily.append(contentsOf: daily)
+            
+            let hourly = result.hourly
+            self.hourly.append(contentsOf: hourly)
                         
             //print(result.current.temp)
             //print(self.currWeatherInfo)
             
+            //Update UI
             DispatchQueue.main.async {
                 self.UpdateUI()
             }
@@ -198,7 +219,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let clouds: Int
         let wind_speed: Double
         let wind_deg: Int
-        let wind_gust: Double
+        let wind_gust: Double?
         let weather: [HourlyWeatherInfo]
         let pop: Double
     }
@@ -216,7 +237,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let dew_point: Double
         let wind_speed: Double
         let wind_deg: Int
-        let wind_gust: Double
+        let wind_gust: Double?
         let weather: [DailyWeatherInfo]
         let cloud: Int?
         let pop: Double
@@ -241,5 +262,43 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
 
+}
+
+//Hourly Collection View
+extension ViewController: UICollectionViewDelegate{
+    
+}
+extension ViewController: UICollectionViewDataSource{
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 24
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = HourlyCollectView.dequeueReusableCell(withReuseIdentifier: "Hourly_Cell", for: indexPath)
+        
+        //Update Hourly cells
+        let cellHour = cell.viewWithTag(1) as! UILabel
+        //print(getDate(dt: self.hourly[0].dt))
+        cellHour.text = "\(getTime(dt: hourly[indexPath.row].dt))"
+        
+        let cellIcon = cell.viewWithTag(2) as! UIImageView
+        cellIcon.image = UIImage(named: "\(hourly[indexPath.row].weather[0].icon).png")
+        
+        let cellTemp = cell.viewWithTag(3) as! UILabel
+        //print(self.hourly[0].temp)
+        cellTemp.text = "\(Int(hourly[indexPath.row].temp))°"
+
+        
+        
+        return cell
+    }
+    
+}
+
+extension ViewController: UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 50, height: 108)
+    }
 }
 
