@@ -145,7 +145,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let clouds: Int
         let wind_speed: Double
         let wind_deg: Int
-        let wind_gust: Double
+        let wind_gust: Double?
         let weather: [CurrWeatherInfo]
         let rain: CurrRainInfo?
         let snow: CurrSnowInfo?
