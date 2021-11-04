@@ -21,6 +21,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     //Hourly weather collection view
     @IBOutlet var HourlyCollectView: UICollectionView!
+    @IBOutlet var DailyTableView: UITableView!
+    //Ten day table view
+    
     
     var currentLocation: CLLocation?
     var currentCity = ""
@@ -49,11 +52,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         return localTime
     }
     
+    func getDay(dt: Int) -> String{
+        let day = Date(timeIntervalSince1970: TimeInterval(dt))
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "E"
+        dayFormatter.timeZone = NSTimeZone() as TimeZone
+        let dailyDay = dayFormatter.string(from: day)
+        
+        return dailyDay
+    }
+    
     //Update UI with json data
     func UpdateUI(){
         //print(self.current!.temp)
         HourlyCollectView.delegate = self
         HourlyCollectView.dataSource = self
+        
+        DailyTableView.delegate = self
+        DailyTableView.dataSource = self
 
         self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
         self.CurrCityLbl.text = self.currentCity
@@ -279,14 +295,17 @@ extension ViewController: UICollectionViewDataSource{
         
         //Update Hourly cells
         let cellHour = cell.viewWithTag(1) as! UILabel
-        //print(getDate(dt: self.hourly[0].dt))
-        cellHour.text = "\(getTime(dt: hourly[indexPath.row].dt))"
+        
+        if(indexPath.row == 0){
+            cellHour.text = "Now"
+        }else {
+            cellHour.text = "\(getTime(dt: hourly[indexPath.row].dt))"
+        }
         
         let cellIcon = cell.viewWithTag(2) as! UIImageView
         cellIcon.image = UIImage(named: "\(hourly[indexPath.row].weather[0].icon).png")
         
         let cellTemp = cell.viewWithTag(3) as! UILabel
-        //print(self.hourly[0].temp)
         cellTemp.text = "\(Int(hourly[indexPath.row].temp))°"
 
         
@@ -300,5 +319,51 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 108)
     }
+}
+
+// Ten Day Table View
+
+extension ViewController: UITableViewDelegate{
+    
+}
+
+extension ViewController: UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 8
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = DailyTableView.dequeueReusableCell(withIdentifier: "Daily_Cell", for: indexPath)
+        
+        //Update Daily cells
+        if(indexPath.row > daily.count-1){
+            return UITableViewCell()
+        }
+        else{
+        let cellDay = cell.viewWithTag(1) as! UILabel
+            if(indexPath.row == 0){
+                cellDay.text = "Today"
+            }else{
+                cellDay.text = "\(getDay(dt: daily[indexPath.row].dt))"
+            }
+        
+        let cellIcon = cell.viewWithTag(2) as! UIImageView
+        cellIcon.image = UIImage(named: "\(daily[indexPath.row].weather[0].icon).png")
+        
+        let cellLowTemp = cell.viewWithTag(3) as! UILabel
+        cellLowTemp.text = "L: \(Int(daily[indexPath.row].temp.min))°"
+        
+        let cellHiTemp = cell.viewWithTag(4) as! UILabel
+        cellHiTemp.text = "H: \(Int(daily[indexPath.row].temp.max))°"
+
+        
+        return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        45
+    }
+    
 }
 
