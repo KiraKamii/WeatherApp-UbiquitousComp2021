@@ -111,19 +111,19 @@
                                                     </collectionViewCell>
                                                 </cells>
                                             </collectionView>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7Ew-do-8Mk" userLabel="Daily Table View">
-                                                <rect key="frame" x="20" y="430" width="374" height="400"/>
+                                            <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7Ew-do-8Mk" userLabel="Daily Table View">
+                                                <rect key="frame" x="20" y="430" width="374" height="395"/>
                                                 <color key="backgroundColor" red="0.36078431370000003" green="0.47843137250000001" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="400" id="qZd-bM-afc"/>
+                                                    <constraint firstAttribute="height" constant="395" id="qZd-bM-afc"/>
                                                 </constraints>
                                                 <color key="separatorColor" red="0.23921568630000001" green="0.33725490200000002" blue="0.69803921570000005" alpha="1" colorSpace="calibratedRGB"/>
-                                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                                 <view key="tableHeaderView" contentMode="scaleToFill" id="ATu-Bg-Bai" userLabel="Daily Header">
                                                     <rect key="frame" x="0.0" y="0.0" width="374" height="35"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7-Day Forecast" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XYt-5e-mDp" userLabel="Day Lbl">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7-Day Forecast" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XYt-5e-mDp" userLabel="Header Lbl">
                                                             <rect key="frame" x="10" y="7.5" width="117" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" red="0.23921568627450979" green="0.33725490196078434" blue="0.69803921568627447" alpha="1" colorSpace="calibratedRGB"/>
@@ -133,6 +133,7 @@
                                                     <color key="backgroundColor" red="0.36078431370000003" green="0.47843137250000001" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="XYt-5e-mDp" firstAttribute="leading" secondItem="ATu-Bg-Bai" secondAttribute="leading" constant="10" id="3Sv-na-3vD"/>
+                                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XYt-5e-mDp" secondAttribute="trailing" constant="20" symbolic="YES" id="o7a-z1-EBy"/>
                                                         <constraint firstItem="XYt-5e-mDp" firstAttribute="centerY" secondItem="ATu-Bg-Bai" secondAttribute="centerY" id="zbh-f6-rfB"/>
                                                     </constraints>
                                                 </view>
@@ -180,6 +181,7 @@
                                                                 <constraint firstItem="5rS-rF-R4l" firstAttribute="centerY" secondItem="Mrm-S7-mla" secondAttribute="centerY" id="6pS-Kp-UIY"/>
                                                                 <constraint firstItem="4NO-cY-2hy" firstAttribute="centerY" secondItem="Mrm-S7-mla" secondAttribute="centerY" id="A3T-FP-plb"/>
                                                                 <constraint firstItem="nMr-4f-zIb" firstAttribute="leading" secondItem="5rS-rF-R4l" secondAttribute="trailing" constant="32" id="TGO-3I-GdT"/>
+                                                                <constraint firstItem="5rS-rF-R4l" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4NO-cY-2hy" secondAttribute="trailing" constant="8" symbolic="YES" id="rIb-A8-cPB"/>
                                                                 <constraint firstItem="4NO-cY-2hy" firstAttribute="leading" secondItem="Mrm-S7-mla" secondAttribute="leading" constant="20" id="rSe-yH-cP7"/>
                                                                 <constraint firstItem="nMr-4f-zIb" firstAttribute="centerY" secondItem="Mrm-S7-mla" secondAttribute="centerY" id="tkI-fh-OeY"/>
                                                                 <constraint firstItem="5rS-rF-R4l" firstAttribute="leading" secondItem="4NO-cY-2hy" secondAttribute="leading" constant="75" id="yoT-ZE-mwz"/>
