@@ -21,9 +21,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     //Hourly weather collection view
     @IBOutlet var HourlyCollectView: UICollectionView!
-    @IBOutlet var DailyTableView: UITableView!
-    //Ten day table view
     
+    //Daily weather table view
+    @IBOutlet var DailyTableView: UITableView!
+    
+    //Details boxes
+    @IBOutlet weak var WindSpeed: UILabel!
+    @IBOutlet weak var WindDirection: UILabel!
+    @IBOutlet weak var FeelsLikeTemp: UILabel!
+    @IBOutlet weak var CloudPerc: UILabel!
+    @IBOutlet weak var HumidityPerc: UILabel!
     
     var currentLocation: CLLocation?
     var currentCity = ""
@@ -42,6 +49,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    //Time and Day Conversions
     func getTime(dt: Int) -> String {
         let time = Date(timeIntervalSince1970: TimeInterval(dt))
         let timeFormatter = DateFormatter()
@@ -62,20 +70,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         return dailyDay
     }
     
+        
+    
+    
     //Update UI with json data
     func UpdateUI(){
-        //print(self.current!.temp)
         HourlyCollectView.delegate = self
         HourlyCollectView.dataSource = self
         
         DailyTableView.delegate = self
         DailyTableView.dataSource = self
 
+        //Current Header
         self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
         self.CurrCityLbl.text = self.currentCity
         self.CurrDescripLbl.text = self.current!.weather[0].description.capitalized
         self.DailyHighLbl.text = "H: \(Int(daily[0].temp.max))°"
         self.DailyLowLbl.text = "L: \(Int(daily[0].temp.min))°"
+        
+        //More Details
+        self.WindSpeed.text = "\(Int(self.current!.wind_speed)) mph"
+        self.WindDirection.text = "\(Direction(self.current!.wind_deg))"
+        self.FeelsLikeTemp.text = "\(Int(self.current!.feels_like))°"
+        self.CloudPerc.text = "\(self.current!.clouds) %"
+        self.HumidityPerc.text = "\(self.current!.humidity) %"
+
+
     }
 
     //Location Code
@@ -181,7 +201,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let uvi: Double
         let clouds: Int
         let wind_speed: Double
-        let wind_deg: Int
+        let wind_deg: Float
         let wind_gust: Double?
         let weather: [CurrWeatherInfo]
         let rain: CurrRainInfo?
@@ -366,4 +386,28 @@ extension ViewController: UITableViewDataSource{
     }
     
 }
+
+//Wind Direction conversion
+enum Direction: String, CaseIterable {
+    case n, ne, e, se, s, sw, w, nw
+}
+
+
+extension Direction: CustomStringConvertible  {
+    init<D: BinaryFloatingPoint>(_ direction: D) {
+        self =  Self.allCases[Int((direction.angle+11.25).truncatingRemainder(dividingBy: 360)/45)]
+    }
+    var description: String { rawValue.uppercased() }
+}
+
+extension BinaryFloatingPoint {
+    var angle: Self {
+        (truncatingRemainder(dividingBy: 360) + 360)
+            .truncatingRemainder(dividingBy: 360)
+    }
+    var direction: Direction { .init(self) }
+}
+
+
+
 
