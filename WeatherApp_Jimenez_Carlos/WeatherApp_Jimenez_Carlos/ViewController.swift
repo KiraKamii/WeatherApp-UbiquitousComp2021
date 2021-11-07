@@ -22,6 +22,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     //Hourly weather collection view
     @IBOutlet var HourlyCollectView: UICollectionView!
     
+    //Daily weather table view
+    @IBOutlet var DailyTableView: UITableView!
+    
+    //Details boxes
+    @IBOutlet weak var WindSpeed: UILabel!
+    @IBOutlet weak var WindDirection: UILabel!
+    @IBOutlet weak var FeelsLikeTemp: UILabel!
+    @IBOutlet weak var CloudPerc: UILabel!
+    @IBOutlet weak var HumidityPerc: UILabel!
+    
     var currentLocation: CLLocation?
     var currentCity = ""
     var daily = [DailyWeather]()
@@ -39,6 +49,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    //Time and Day Conversions
     func getTime(dt: Int) -> String {
         let time = Date(timeIntervalSince1970: TimeInterval(dt))
         let timeFormatter = DateFormatter()
@@ -49,17 +60,42 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         return localTime
     }
     
+    func getDay(dt: Int) -> String{
+        let day = Date(timeIntervalSince1970: TimeInterval(dt))
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "E"
+        dayFormatter.timeZone = NSTimeZone() as TimeZone
+        let dailyDay = dayFormatter.string(from: day)
+        
+        return dailyDay
+    }
+    
+        
+    
+    
     //Update UI with json data
     func UpdateUI(){
-        //print(self.current!.temp)
         HourlyCollectView.delegate = self
         HourlyCollectView.dataSource = self
+        
+        DailyTableView.delegate = self
+        DailyTableView.dataSource = self
 
+        //Current Header
         self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
         self.CurrCityLbl.text = self.currentCity
         self.CurrDescripLbl.text = self.current!.weather[0].description.capitalized
         self.DailyHighLbl.text = "H: \(Int(daily[0].temp.max))°"
         self.DailyLowLbl.text = "L: \(Int(daily[0].temp.min))°"
+        
+        //More Details
+        self.WindSpeed.text = "\(Int(self.current!.wind_speed)) mph"
+        self.WindDirection.text = "\(Direction(self.current!.wind_deg))"
+        self.FeelsLikeTemp.text = "\(Int(self.current!.feels_like))°"
+        self.CloudPerc.text = "\(self.current!.clouds) %"
+        self.HumidityPerc.text = "\(self.current!.humidity) %"
+
+
     }
 
     //Location Code
@@ -165,7 +201,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let uvi: Double
         let clouds: Int
         let wind_speed: Double
-        let wind_deg: Int
+        let wind_deg: Float
         let wind_gust: Double?
         let weather: [CurrWeatherInfo]
         let rain: CurrRainInfo?
@@ -279,14 +315,17 @@ extension ViewController: UICollectionViewDataSource{
         
         //Update Hourly cells
         let cellHour = cell.viewWithTag(1) as! UILabel
-        //print(getDate(dt: self.hourly[0].dt))
-        cellHour.text = "\(getTime(dt: hourly[indexPath.row].dt))"
+        
+        if(indexPath.row == 0){
+            cellHour.text = "Now"
+        }else {
+            cellHour.text = "\(getTime(dt: hourly[indexPath.row].dt))"
+        }
         
         let cellIcon = cell.viewWithTag(2) as! UIImageView
         cellIcon.image = UIImage(named: "\(hourly[indexPath.row].weather[0].icon).png")
         
         let cellTemp = cell.viewWithTag(3) as! UILabel
-        //print(self.hourly[0].temp)
         cellTemp.text = "\(Int(hourly[indexPath.row].temp))°"
 
         
@@ -301,4 +340,74 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
         return CGSize(width: 50, height: 108)
     }
 }
+
+// Ten Day Table View
+
+extension ViewController: UITableViewDelegate{
+    
+}
+
+extension ViewController: UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 8
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = DailyTableView.dequeueReusableCell(withIdentifier: "Daily_Cell", for: indexPath)
+        
+        //Update Daily cells
+        if(indexPath.row > daily.count-1){
+            return UITableViewCell()
+        }
+        else{
+        let cellDay = cell.viewWithTag(1) as! UILabel
+            if(indexPath.row == 0){
+                cellDay.text = "Today"
+            }else{
+                cellDay.text = "\(getDay(dt: daily[indexPath.row].dt))"
+            }
+        
+        let cellIcon = cell.viewWithTag(2) as! UIImageView
+        cellIcon.image = UIImage(named: "\(daily[indexPath.row].weather[0].icon).png")
+        
+        let cellLowTemp = cell.viewWithTag(3) as! UILabel
+        cellLowTemp.text = "L: \(Int(daily[indexPath.row].temp.min))°"
+        
+        let cellHiTemp = cell.viewWithTag(4) as! UILabel
+        cellHiTemp.text = "H: \(Int(daily[indexPath.row].temp.max))°"
+
+        
+        return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        45
+    }
+    
+}
+
+//Wind Direction conversion
+enum Direction: String, CaseIterable {
+    case n, ne, e, se, s, sw, w, nw
+}
+
+
+extension Direction: CustomStringConvertible  {
+    init<D: BinaryFloatingPoint>(_ direction: D) {
+        self =  Self.allCases[Int((direction.angle+11.25).truncatingRemainder(dividingBy: 360)/45)]
+    }
+    var description: String { rawValue.uppercased() }
+}
+
+extension BinaryFloatingPoint {
+    var angle: Self {
+        (truncatingRemainder(dividingBy: 360) + 360)
+            .truncatingRemainder(dividingBy: 360)
+    }
+    var direction: Direction { .init(self) }
+}
+
+
+
 
