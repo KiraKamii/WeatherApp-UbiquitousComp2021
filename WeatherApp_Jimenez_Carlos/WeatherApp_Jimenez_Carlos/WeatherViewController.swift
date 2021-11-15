@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController, CLLocationManagerDelegate {
+class WeatherViewController: UIViewController, CLLocationManagerDelegate {
 
     let locationManager = CLLocationManager()
     
@@ -71,6 +71,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
         
+    @IBAction func ListButton(_ sender: Any) {
+        performSegue(withIdentifier: "WeatherToList", sender: self)
+
+    }
     
     
     //Update UI with json data
@@ -102,6 +106,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     func setupLocation() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        if locationManager.authorizationStatus == .denied {
+            let error = UIAlertController(title: "Location Use Was Not Allowed", message: "Your location is needed to provide local weather.", preferredStyle: .alert)
+            error.addAction(UIAlertAction(title: "Okay", style: .cancel))
+            present(error, animated: true)
+        }
         locationManager.startUpdatingLocation()
     }
     
@@ -179,6 +188,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         print("\(lat) | \(long)")
     }
     
+    //JSON response
     struct WeatherResponse: Codable {
         let lat: Float
         let lon: Float
@@ -301,10 +311,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 }
 
 //Hourly Collection View
-extension ViewController: UICollectionViewDelegate{
+extension WeatherViewController: UICollectionViewDelegate{
     
 }
-extension ViewController: UICollectionViewDataSource{
+extension WeatherViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 24
@@ -335,7 +345,7 @@ extension ViewController: UICollectionViewDataSource{
     
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout{
+extension WeatherViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 108)
     }
@@ -343,11 +353,11 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
 
 // Ten Day Table View
 
-extension ViewController: UITableViewDelegate{
+extension WeatherViewController: UITableViewDelegate{
     
 }
 
-extension ViewController: UITableViewDataSource{
+extension WeatherViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 8
     }
