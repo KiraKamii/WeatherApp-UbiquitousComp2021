@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -427,33 +428,22 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xEH-ja-C3n">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Weather" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXq-FD-HYB">
-                                                <rect key="frame" x="8" y="8" width="149" height="51"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXq-FD-HYB">
+                                                <rect key="frame" x="20" y="15" width="149" height="51"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="43"/>
                                                 <color key="textColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="Search for a city" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w5f-9j-dND">
-                                                <rect key="frame" x="0.0" y="59" width="414" height="51"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <searchBar contentMode="redraw" placeholder="Search for a city" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="w5f-9j-dND">
+                                                <rect key="frame" x="0.0" y="82" width="414" height="51"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="search" textContentType="address-level2"/>
                                                 <scopeButtonTitles>
                                                     <string>Title</string>
                                                     <string>Title</string>
                                                 </scopeButtonTitles>
                                             </searchBar>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEn-48-aXy">
-                                                <rect key="frame" x="364" y="15" width="42" height="36"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="tintColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" image="ellipsis.circle" catalog="system">
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="24"/>
-                                                </buttonConfiguration>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o4g-tH-Mpf">
-                                                <rect key="frame" x="170" y="345" width="75" height="35"/>
+                                                <rect key="frame" x="170" y="678" width="75" height="35"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="gray" title="Temp Return"/>
@@ -461,8 +451,59 @@
                                                     <action selector="DismissBtn:" destination="Jbh-PM-Dnf" eventType="touchUpInside" id="Hkg-RY-wXs"/>
                                                 </connections>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qnz-a8-ZBq" userLabel="SettingsBtn">
+                                                <rect key="frame" x="353" y="20" width="41" height="40"/>
+                                                <color key="tintColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <menu key="menu" title="Settings" id="aEA-xd-WW8">
+                                                    <children>
+                                                        <command title="Edit List" discoverabilityTitle="Edit List" id="XKB-l2-cCi"/>
+                                                        <command title="°F" discoverabilityTitle="°F" menuElementState="on" id="zNc-en-wmi"/>
+                                                        <command title="°C" discoverabilityTitle="°C" id="bva-M1-gy6"/>
+                                                    </children>
+                                                </menu>
+                                                <state key="normal" image="ellipsis.circle" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="35"/>
+                                                </state>
+                                            </button>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="czD-qN-elY">
+                                                <rect key="frame" x="20" y="179" width="374" height="300"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="300" id="2Rv-tZ-H2c"/>
+                                                </constraints>
+                                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8BG-vV-GL7">
+                                                    <size key="itemSize" width="374" height="163"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                                <cells>
+                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Weather_Cell" id="c4V-Tu-CGO">
+                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="163"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="11G-Pf-7Qy">
+                                                            <rect key="frame" x="0.0" y="0.0" width="374" height="163"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                        </collectionViewCellContentView>
+                                                        <color key="backgroundColor" red="0.36078431370000003" green="0.47843137250000001" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <size key="customSize" width="374" height="163"/>
+                                                    </collectionViewCell>
+                                                </cells>
+                                            </collectionView>
                                         </subviews>
                                         <color key="backgroundColor" red="0.078431372550000003" green="0.1529411765" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="czD-qN-elY" firstAttribute="top" secondItem="w5f-9j-dND" secondAttribute="bottom" constant="46" id="1E9-XN-RqX"/>
+                                            <constraint firstAttribute="trailing" secondItem="w5f-9j-dND" secondAttribute="trailing" id="5Qr-xE-HQ0"/>
+                                            <constraint firstItem="bXq-FD-HYB" firstAttribute="leading" secondItem="xEH-ja-C3n" secondAttribute="leading" constant="20" id="9za-ts-h8q"/>
+                                            <constraint firstAttribute="trailing" secondItem="qnz-a8-ZBq" secondAttribute="trailing" constant="20" id="BnC-dP-JfG"/>
+                                            <constraint firstAttribute="trailing" secondItem="czD-qN-elY" secondAttribute="trailing" constant="20" id="H5C-em-gYx"/>
+                                            <constraint firstItem="czD-qN-elY" firstAttribute="leading" secondItem="xEH-ja-C3n" secondAttribute="leading" constant="20" id="ZUu-Pg-kyr"/>
+                                            <constraint firstItem="qnz-a8-ZBq" firstAttribute="top" secondItem="xEH-ja-C3n" secondAttribute="top" constant="20" id="i83-Jy-y4s"/>
+                                            <constraint firstItem="w5f-9j-dND" firstAttribute="top" secondItem="bXq-FD-HYB" secondAttribute="bottom" constant="16" id="iyc-Qs-css"/>
+                                            <constraint firstItem="w5f-9j-dND" firstAttribute="leading" secondItem="xEH-ja-C3n" secondAttribute="leading" id="nCW-1A-ZgV"/>
+                                            <constraint firstItem="bXq-FD-HYB" firstAttribute="top" secondItem="xEH-ja-C3n" secondAttribute="top" constant="15" id="sNw-yy-d93"/>
+                                        </constraints>
                                     </view>
                                 </subviews>
                                 <constraints>
@@ -484,10 +525,13 @@
                             <constraint firstItem="g1B-zO-bRS" firstAttribute="leading" secondItem="jQq-pb-FzI" secondAttribute="leading" id="qjX-8Y-iyh"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="WeatherListCollectView" destination="czD-qN-elY" id="Vit-QF-5dr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ftC-Jp-og9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1885.5072463768117" y="105.80357142857143"/>
+            <point key="canvasLocation" x="2124.6376811594205" y="79.6875"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="UHe-HR-fFe">
