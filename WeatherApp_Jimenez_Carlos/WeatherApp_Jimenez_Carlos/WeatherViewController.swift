@@ -8,8 +8,17 @@
 import UIKit
 import CoreLocation
 
+struct ListWeather {
+    var currentTemp: Int
+    var currentCity: String
+    var currentDescrip: String
+    var currentHi: Int
+    var currentLo: Int
+}
+
 class WeatherViewController: UIViewController, CLLocationManagerDelegate {
 
+    var currListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
     let locationManager = CLLocationManager()
     
     //Current Forecast Header
@@ -86,6 +95,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         DailyTableView.dataSource = self
 
         //Current Header
+        currListWeather = ListWeather(currentTemp: Int(self.current!.temp), currentCity: self.currentCity, currentDescrip: self.current!.weather[0].description.capitalized, currentHi: Int(daily[0].temp.max), currentLo: Int(daily[0].temp.min))
         self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
         self.CurrCityLbl.text = self.currentCity
         self.CurrDescripLbl.text = self.current!.weather[0].description.capitalized
@@ -100,6 +110,13 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         self.HumidityPerc.text = "\(self.current!.humidity) %"
 
 
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "WeatherToList"{
+            let ListViewController = segue.destination as! ListViewController
+            ListViewController.currListWeather = currListWeather
+        }
     }
 
     //Location Code
