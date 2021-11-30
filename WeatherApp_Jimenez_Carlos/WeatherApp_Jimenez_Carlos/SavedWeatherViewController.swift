@@ -1,26 +1,20 @@
 //
-//  ViewController.swift
+//  SavedWeatherViewController.swift
 //  WeatherApp_Jimenez_Carlos
 //
-//  Created by Carlos Jimenez on 10/19/21.
+//  Created by Carlos Jimenez on 11/30/21.
 //
 
 import UIKit
 import CoreLocation
 
-struct ListWeather {
-    var currentTemp: Int
-    var currentCity: String
-    var currentDescrip: String
-    var currentHi: Int
-    var currentLo: Int
-}
 
-class WeatherViewController: UIViewController, CLLocationManagerDelegate {
 
+class SavedWeatherViewController: UIViewController, CLLocationManagerDelegate {
+    
     var currListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
     let locationManager = CLLocationManager()
-    
+
     //Current Forecast Header
     @IBOutlet weak var CurrTempLbl: UILabel!
     @IBOutlet weak var CurrCityLbl: UILabel!
@@ -49,9 +43,37 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        // Do any additional setup after loading the view.
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
+            
+        leftSwipe.direction = .left
+        rightSwipe.direction = .right
+
+        view.addGestureRecognizer(leftSwipe)
+        view.addGestureRecognizer(rightSwipe)
     }
-    
+        
+    //swipe gesture
+    @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
+    {
+//        if sender.direction == .left
+//        {
+//           print("Swipe left")
+//           // show the view from the right side
+//        }
+
+        if sender.direction == .right
+        {
+           print("Swipe right")
+           // show the view from the left side
+            self.dismiss(animated: true, completion: nil)
+            performSegue(withIdentifier: "W2toW1", sender: self)
+            
+
+        }
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupLocation()
@@ -78,13 +100,12 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         
         return dailyDay
     }
-    
-        
-    @IBAction func ListButton(_ sender: Any) {
-        performSegue(withIdentifier: "WeatherToList", sender: self)
 
-    }
     
+    //list button
+    @IBAction func ListButton(_ sender: Any) {
+        performSegue(withIdentifier: "Weather2ToList", sender: self)
+    }
     
     //Update UI with json data
     func UpdateUI(){
@@ -112,8 +133,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
 
     }
     
+    // segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "WeatherToList"{
+        if segue.identifier == "Weather2ToList"{
             let ListViewController = segue.destination as! ListViewController
             ListViewController.currListWeather = currListWeather
         }
@@ -143,8 +165,13 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         guard let currentLocation = currentLocation else {
             return
         }
-        let long = currentLocation.coordinate.longitude
-        let lat = currentLocation.coordinate.latitude
+        //let long = currentLocation.coordinate.longitude
+        //let lat = currentLocation.coordinate.latitude
+
+        //***Dallas placeholder
+        let lat = 32.7767
+        let long = -96.7970
+        
         // reverse geocode
         CLGeocoder().reverseGeocodeLocation(currentLocation) {(placemarks, error) in
             
@@ -153,10 +180,13 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
                 return
             }
             
-            if let place = placemarks?[0] {
-                print(place.locality!)
-                let city = place.locality!
-                self.currentCity = city
+            if (placemarks?[0]) != nil {
+                //print(place.locality!)
+                //let city = place.locality!
+                
+                //***Dallas placeholder
+                print("Dallas")
+                self.currentCity = "Dallas"
             }
         }
        
@@ -323,15 +353,14 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
         let eve: Double
         let morn: Double
     }
-    
-
 }
+
 
 //Hourly Collection View
-extension WeatherViewController: UICollectionViewDelegate{
+extension SavedWeatherViewController: UICollectionViewDelegate{
     
 }
-extension WeatherViewController: UICollectionViewDataSource{
+extension SavedWeatherViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 24
@@ -362,7 +391,7 @@ extension WeatherViewController: UICollectionViewDataSource{
     
 }
 
-extension WeatherViewController: UICollectionViewDelegateFlowLayout{
+extension SavedWeatherViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 108)
     }
@@ -370,11 +399,11 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout{
 
 // Ten Day Table View
 
-extension WeatherViewController: UITableViewDelegate{
+extension SavedWeatherViewController: UITableViewDelegate{
     
 }
 
-extension WeatherViewController: UITableViewDataSource{
+extension SavedWeatherViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 8
     }
@@ -414,26 +443,6 @@ extension WeatherViewController: UITableViewDataSource{
     
 }
 
-//Wind Direction conversion
-enum Direction: String, CaseIterable {
-    case n, ne, e, se, s, sw, w, nw
-}
-
-
-extension Direction: CustomStringConvertible  {
-    init<D: BinaryFloatingPoint>(_ direction: D) {
-        self =  Self.allCases[Int((direction.angle+11.25).truncatingRemainder(dividingBy: 360)/45)]
-    }
-    var description: String { rawValue.uppercased() }
-}
-
-extension BinaryFloatingPoint {
-    var angle: Self {
-        (truncatingRemainder(dividingBy: 360) + 360)
-            .truncatingRemainder(dividingBy: 360)
-    }
-    var direction: Direction { .init(self) }
-}
 
 
 

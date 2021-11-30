@@ -11,13 +11,6 @@ class ListViewController: UIViewController {
 
     @IBOutlet var WeatherListCollectView: UICollectionView!
     
-    /*current struct
-        current temp
-        current city
-        current description
-        hi low temps
-    */
-    
     var currListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
     
     
