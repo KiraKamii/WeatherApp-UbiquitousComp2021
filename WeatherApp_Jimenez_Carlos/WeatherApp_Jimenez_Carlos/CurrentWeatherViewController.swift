@@ -8,7 +8,18 @@
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController, CLLocationManagerDelegate {
+struct ListWeather {
+    var currentTemp: Int
+    var currentCity: String
+    var currentDescrip: String
+    var currentHi: Int
+    var currentLo: Int
+}
+
+class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate {
+
+    var currListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
+    var savedListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
 
     let locationManager = CLLocationManager()
     
@@ -33,15 +44,43 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var HumidityPerc: UILabel!
     
     var currentLocation: CLLocation?
-    var currentCity = ""
+    var currentCity = "Current Location"
     var daily = [DailyWeather]()
     var hourly = [HourlyWeather]()
     var current: CurrentWeather?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
+            
+        leftSwipe.direction = .left
+        rightSwipe.direction = .right
+
+        view.addGestureRecognizer(leftSwipe)
+        view.addGestureRecognizer(rightSwipe)
     }
+    
+    //swipe gesture
+    @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
+    {
+        if sender.direction == .left
+        {
+           print("Swipe left")
+           // show the view from the right side
+            performSegue(withIdentifier: "W1toW2", sender: self)
+
+            
+        }
+
+//        if sender.direction == .right
+//        {
+//           print("Swipe right")
+//           // show the view from the left side
+//        }
+    }
+    
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -70,7 +109,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         return dailyDay
     }
     
-        
+        //list button
+    @IBAction func ListButton(_ sender: Any) {
+        print("List")
+        performSegue(withIdentifier: "WeatherToList", sender: self)
+    }
     
     
     //Update UI with json data
@@ -82,6 +125,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         DailyTableView.dataSource = self
 
         //Current Header
+        currListWeather = ListWeather(currentTemp: Int(self.current!.temp), currentCity: self.currentCity, currentDescrip: self.current!.weather[0].description.capitalized, currentHi: Int(daily[0].temp.max), currentLo: Int(daily[0].temp.min))
         self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
         self.CurrCityLbl.text = self.currentCity
         self.CurrDescripLbl.text = self.current!.weather[0].description.capitalized
@@ -97,11 +141,29 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
 
     }
+    
+    // segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "WeatherToList"{
+            let ListViewController = segue.destination as! ListViewController
+            ListViewController.currListWeather = currListWeather
+            ListViewController.savedListWeather = savedListWeather
+        }
+        if segue.identifier == "W1toW2"{
+            let SavedWeatherViewController = segue.destination as! SavedWeatherViewController
+            SavedWeatherViewController.currListWeather = currListWeather
+        }
+    }
 
     //Location Code
     func setupLocation() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        if locationManager.authorizationStatus == .denied {
+            let error = UIAlertController(title: "Location Use Was Not Allowed", message: "Your location is needed to provide local weather.", preferredStyle: .alert)
+            error.addAction(UIAlertAction(title: "Okay", style: .cancel))
+            present(error, animated: true)
+        }
         locationManager.startUpdatingLocation()
     }
     
@@ -179,6 +241,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         print("\(lat) | \(long)")
     }
     
+    //JSON response
     struct WeatherResponse: Codable {
         let lat: Float
         let lon: Float
@@ -296,15 +359,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let eve: Double
         let morn: Double
     }
-    
-
 }
 
 //Hourly Collection View
-extension ViewController: UICollectionViewDelegate{
+extension CurrentWeatherViewController: UICollectionViewDelegate{
     
 }
-extension ViewController: UICollectionViewDataSource{
+extension CurrentWeatherViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 24
@@ -335,7 +396,7 @@ extension ViewController: UICollectionViewDataSource{
     
 }
 
-extension ViewController: UICollectionViewDelegateFlowLayout{
+extension CurrentWeatherViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 108)
     }
@@ -343,11 +404,11 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
 
 // Ten Day Table View
 
-extension ViewController: UITableViewDelegate{
+extension CurrentWeatherViewController: UITableViewDelegate{
     
 }
 
-extension ViewController: UITableViewDataSource{
+extension CurrentWeatherViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 8
     }
