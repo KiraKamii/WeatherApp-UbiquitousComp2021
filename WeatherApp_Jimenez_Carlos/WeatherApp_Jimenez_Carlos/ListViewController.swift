@@ -12,14 +12,26 @@ class ListViewController: UIViewController {
     @IBOutlet var WeatherListCollectView: UICollectionView!
     
     var currListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
-    
+    var savedListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         WeatherListCollectView.delegate = self
         WeatherListCollectView.dataSource = self
         // Do any additional setup after loading the view.
+        //print(currentTime(timeZoneIdentifier: "CST")!) //2019-11-20 23:37:28 091
+
         
+    }
+    
+    func currentTime(timeZoneIdentifier: String) -> String? {
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+        dateFormatter.timeZone = TimeZone(identifier: timeZoneIdentifier)
+        
+        return dateFormatter.string(from: Date())
     }
     
 
@@ -32,7 +44,7 @@ extension ListViewController: UICollectionViewDelegate{
 extension ListViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -53,12 +65,33 @@ extension ListViewController: UICollectionViewDataSource{
         
         let cellCurrLow = cell.viewWithTag(5) as! UILabel
         cellCurrLow.text = "L: \(currListWeather.currentLo)°"
+        
+        if indexPath.item == 1 {
+            
+            let cellW2City = cell.viewWithTag(6) as!UILabel
+            cellW2City.text = savedListWeather.currentCity
+            cellCurrTemp.text = "\(savedListWeather.currentTemp)°"
+            //time instead of city
+            cellCurrCity.text = currentTime(timeZoneIdentifier: "CST")
+            cellCurrDescrip.text = savedListWeather.currentDescrip
+            cellCurrHi.text = "H: \(savedListWeather.currentHi)°"
+            cellCurrLow.text = "L: \(savedListWeather.currentLo)°"
+
+        }
 
         
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.dismiss(animated: true, completion: nil)
+        if indexPath.item == 1 {
+            performSegue(withIdentifier: "ListToWeather2", sender: self)
+            self.dismiss(animated: false, completion: nil)
+
+        }else if indexPath.item == 0 {
+            performSegue(withIdentifier: "ListToWeather", sender: self)
+            self.dismiss(animated: false, completion: nil)
+
+        }
     }
     
 }

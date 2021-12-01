@@ -19,6 +19,8 @@ struct ListWeather {
 class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate {
 
     var currListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
+    var savedListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
+
     let locationManager = CLLocationManager()
     
     //Current Forecast Header
@@ -42,14 +44,13 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate 
     @IBOutlet weak var HumidityPerc: UILabel!
     
     var currentLocation: CLLocation?
-    var currentCity = ""
+    var currentCity = "Current Location"
     var daily = [DailyWeather]()
     var hourly = [HourlyWeather]()
     var current: CurrentWeather?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
             
@@ -110,6 +111,7 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate 
     
         //list button
     @IBAction func ListButton(_ sender: Any) {
+        print("List")
         performSegue(withIdentifier: "WeatherToList", sender: self)
     }
     
@@ -145,6 +147,11 @@ class CurrentWeatherViewController: UIViewController, CLLocationManagerDelegate 
         if segue.identifier == "WeatherToList"{
             let ListViewController = segue.destination as! ListViewController
             ListViewController.currListWeather = currListWeather
+            ListViewController.savedListWeather = savedListWeather
+        }
+        if segue.identifier == "W1toW2"{
+            let SavedWeatherViewController = segue.destination as! SavedWeatherViewController
+            SavedWeatherViewController.currListWeather = currListWeather
         }
     }
 

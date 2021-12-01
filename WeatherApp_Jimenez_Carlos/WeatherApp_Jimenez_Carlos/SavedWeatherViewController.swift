@@ -13,6 +13,8 @@ import CoreLocation
 class SavedWeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     var currListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
+    var savedListWeather = ListWeather(currentTemp: 0, currentCity: "", currentDescrip: "", currentHi: 0, currentLo: 0)
+
     let locationManager = CLLocationManager()
 
     //Current Forecast Header
@@ -36,7 +38,7 @@ class SavedWeatherViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var HumidityPerc: UILabel!
     
     var currentLocation: CLLocation?
-    var currentCity = ""
+    var currentCity = "Dallas"
     var daily = [DailyWeather]()
     var hourly = [HourlyWeather]()
     var current: CurrentWeather?
@@ -104,6 +106,7 @@ class SavedWeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     //list button
     @IBAction func ListButton(_ sender: Any) {
+        print("List")
         performSegue(withIdentifier: "Weather2ToList", sender: self)
     }
     
@@ -116,7 +119,7 @@ class SavedWeatherViewController: UIViewController, CLLocationManagerDelegate {
         DailyTableView.dataSource = self
 
         //Current Header
-        currListWeather = ListWeather(currentTemp: Int(self.current!.temp), currentCity: self.currentCity, currentDescrip: self.current!.weather[0].description.capitalized, currentHi: Int(daily[0].temp.max), currentLo: Int(daily[0].temp.min))
+        savedListWeather = ListWeather(currentTemp: Int(self.current!.temp), currentCity: self.currentCity, currentDescrip: self.current!.weather[0].description.capitalized, currentHi: Int(daily[0].temp.max), currentLo: Int(daily[0].temp.min))
         self.CurrTempLbl.text = "\(Int(self.current!.temp))°"
         self.CurrCityLbl.text = self.currentCity
         self.CurrDescripLbl.text = self.current!.weather[0].description.capitalized
@@ -138,7 +141,13 @@ class SavedWeatherViewController: UIViewController, CLLocationManagerDelegate {
         if segue.identifier == "Weather2ToList"{
             let ListViewController = segue.destination as! ListViewController
             ListViewController.currListWeather = currListWeather
+            ListViewController.savedListWeather = savedListWeather
         }
+        if segue.identifier == "W2toW1"{
+            let CurrentWeatherViewController = segue.destination as! CurrentWeatherViewController
+            CurrentWeatherViewController.savedListWeather = savedListWeather
+        }
+            
     }
 
     //Location Code

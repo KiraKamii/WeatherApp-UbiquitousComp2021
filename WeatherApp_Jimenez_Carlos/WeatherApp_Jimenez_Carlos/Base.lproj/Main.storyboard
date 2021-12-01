@@ -366,6 +366,19 @@
                                             <constraint firstAttribute="height" constant="1" id="Dpy-vK-QJQ"/>
                                         </constraints>
                                     </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="O8f-MB-cBf">
+                                        <rect key="frame" x="178.5" y="16" width="57" height="20"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="KKk-hp-OBm">
+                                                <rect key="frame" x="0.0" y="0.5" width="20" height="19"/>
+                                                <color key="tintColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </imageView>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="TQV-Ud-78Q">
+                                                <rect key="frame" x="37" y="0.5" width="20" height="19"/>
+                                                <color key="tintColor" red="0.078431372550000003" green="0.1529411765" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </imageView>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.47843137250000001" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -376,6 +389,8 @@
                                     <constraint firstItem="0bP-UK-Ksp" firstAttribute="top" secondItem="LHo-tM-3PI" secondAttribute="top" constant="4" id="aDC-OS-syo"/>
                                     <constraint firstItem="ZU9-qn-zVj" firstAttribute="leading" secondItem="LHo-tM-3PI" secondAttribute="leading" id="dgb-gE-8Ka"/>
                                     <constraint firstAttribute="trailing" secondItem="0bP-UK-Ksp" secondAttribute="trailing" constant="20" id="jBA-tU-chp"/>
+                                    <constraint firstItem="O8f-MB-cBf" firstAttribute="top" secondItem="ZU9-qn-zVj" secondAttribute="bottom" constant="15" id="mGs-B3-zMC"/>
+                                    <constraint firstItem="O8f-MB-cBf" firstAttribute="centerX" secondItem="LHo-tM-3PI" secondAttribute="centerX" id="w7s-Dz-U5T"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -407,8 +422,8 @@
                         <outlet property="HumidityPerc" destination="1V3-Cx-5jL" id="lha-Td-tLY"/>
                         <outlet property="WindDirection" destination="TdP-ck-5c8" id="SyG-mY-EBz"/>
                         <outlet property="WindSpeed" destination="nym-pa-bVz" id="Clf-Ho-tuj"/>
-                        <segue destination="Jbh-PM-Dnf" kind="presentation" identifier="WeatherToList" id="ZY2-xe-g4g"/>
-                        <segue destination="FTr-hp-Py1" kind="show" identifier="W1toW2" id="aBC-kC-Vuv"/>
+                        <segue destination="Jbh-PM-Dnf" kind="show" identifier="WeatherToList" id="ZY2-xe-g4g"/>
+                        <segue destination="FTr-hp-Py1" kind="show" identifier="W1toW2" animates="NO" id="aBC-kC-Vuv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -477,7 +492,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="369" height="164"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S7H-3y-D0Z">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="6" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S7H-3y-D0Z">
                                                                     <rect key="frame" x="8" y="8" width="137.5" height="24"/>
                                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="20"/>
                                                                     <color key="textColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -576,13 +591,16 @@
                             <constraint firstItem="g1B-zO-bRS" firstAttribute="leading" secondItem="jQq-pb-FzI" secondAttribute="leading" id="qjX-8Y-iyh"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="jJI-gA-qg7"/>
                     <connections>
                         <outlet property="WeatherListCollectView" destination="czD-qN-elY" id="Vit-QF-5dr"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="ListToWeather" animates="NO" id="kPO-hm-Qnf"/>
+                        <segue destination="FTr-hp-Py1" kind="show" identifier="ListToWeather2" animates="NO" id="WhB-c8-a5Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ftC-Jp-og9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2307" y="575"/>
+            <point key="canvasLocation" x="2441" y="604"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="UHe-HR-fFe">
@@ -958,16 +976,31 @@
                                             <constraint firstAttribute="height" constant="1" id="dfA-gH-bDr"/>
                                         </constraints>
                                     </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="EBc-HJ-dLZ">
+                                        <rect key="frame" x="178.5" y="16" width="57" height="20"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="vyf-yq-oNG">
+                                                <rect key="frame" x="0.0" y="0.5" width="20" height="19"/>
+                                                <color key="tintColor" red="0.078431372550000003" green="0.1529411765" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </imageView>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="sWP-Gw-FZe">
+                                                <rect key="frame" x="37" y="0.5" width="20" height="19"/>
+                                                <color key="tintColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </imageView>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.47843137250000001" blue="0.91764705879999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="9Gj-bk-FKb" firstAttribute="top" secondItem="dVP-nP-Tpn" secondAttribute="top" id="BAU-TN-Zhq"/>
                                     <constraint firstAttribute="height" constant="64" id="Ow3-7c-a8b"/>
                                     <constraint firstItem="lzJ-dI-UNh" firstAttribute="top" secondItem="dVP-nP-Tpn" secondAttribute="top" constant="4" id="SeO-fb-5Jl"/>
+                                    <constraint firstItem="EBc-HJ-dLZ" firstAttribute="top" secondItem="9Gj-bk-FKb" secondAttribute="bottom" constant="15" id="UOV-Pg-p0F"/>
                                     <constraint firstAttribute="trailing" secondItem="lzJ-dI-UNh" secondAttribute="trailing" constant="20" id="UeZ-3O-e1r"/>
                                     <constraint firstAttribute="trailing" secondItem="9Gj-bk-FKb" secondAttribute="trailing" id="Z2e-Ax-DhO"/>
                                     <constraint firstItem="lzJ-dI-UNh" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="dVP-nP-Tpn" secondAttribute="leading" constant="20" symbolic="YES" id="cxt-LW-Tdj"/>
                                     <constraint firstItem="9Gj-bk-FKb" firstAttribute="leading" secondItem="dVP-nP-Tpn" secondAttribute="leading" id="dHy-4i-kkO"/>
+                                    <constraint firstItem="EBc-HJ-dLZ" firstAttribute="centerX" secondItem="dVP-nP-Tpn" secondAttribute="centerX" id="iwH-lS-HbO"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -999,8 +1032,8 @@
                         <outlet property="HumidityPerc" destination="2UF-gz-Oat" id="eha-ee-2cV"/>
                         <outlet property="WindDirection" destination="Tcq-X7-87B" id="JP3-ET-Xjs"/>
                         <outlet property="WindSpeed" destination="Y8h-c0-6yv" id="0zX-HC-YYk"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="W2toW1" id="9Rz-Hs-Ocl"/>
-                        <segue destination="Jbh-PM-Dnf" kind="presentation" identifier="Weather2ToList" id="FXA-XW-7w9"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="W2toW1" animates="NO" id="9Rz-Hs-Ocl"/>
+                        <segue destination="Jbh-PM-Dnf" kind="show" identifier="Weather2ToList" id="FXA-XW-7w9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8ti-Qo-Guz" sceneMemberID="firstResponder"/>
@@ -1009,11 +1042,13 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="FXA-XW-7w9"/>
+        <segue reference="aBC-kC-Vuv"/>
+        <segue reference="ZY2-xe-g4g"/>
         <segue reference="9Rz-Hs-Ocl"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="01d" width="341" height="341"/>
+        <image name="circle.fill" catalog="system" width="128" height="121"/>
         <image name="ellipsis.circle" catalog="system" width="128" height="121"/>
         <image name="list.bullet" catalog="system" width="128" height="88"/>
     </resources>
